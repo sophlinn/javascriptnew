@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+    canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
+
+//Setting Variables
+var myGamePiece;
+var keys = {};
+
+// Setting Up Game to Draw, and Component 
+function startGame() {
+    myGamePiece = new component (10,"black")
+    myGameArea.start();
+}
+
+// Elements of Canvas, Including updating 50 times per second. Took away clearing as you want to draw
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 800;
+        this.canvas.height = 500;
+        // this.canvas.style.cursor = 'none';
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.interval = setInterval(updateGameArea, 0);
+        window.addEventListener('mousemove', function (e) {
+            myGameArea.x = e.pageX;
+            myGameArea.y = e.pageY;
+        })
+    },
+    clear: function(){
+        this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+    }
+}
+
+// Elements of the Component
+function component(radius, color, x, y) {
+    this.radius = radius;
+    this.color= color;
+    this.speedX = 0;
+    this.speedY = 0;  
+    this.x = x;
+    this.y = y; 
+    this.update = function(){
+        ctx = myGameArea.context;
+        ctx.arc(this.x,this.y,this.radius,0,2*Math.PI);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.moveTo(this.x,this.y);
+    }
+}        
+
+// What happens when you move 
+function updateGameArea(){
+    myGameArea.clear();
+    if (myGameArea.x && myGameArea.y) {
+        myGamePiece.x = myGameArea.x;
+        myGamePiece.y = myGameArea.y;        
+    }
+    myGamePiece.update();   
+}
+
+// Specific Functions
+window.addEventListener(‘keydown’, function(e){
+      keys[e.keyCode] = true; 
+      e.preventDefault();
+});
+
+function input(){
+      if(66 in keys){ 
+          myGamePiece.color = "blue"
+        }
+ }
+
+function input(){
+      if(71 in keys){ 
+          myGamePiece.color = "green"
+        }
+ }
+
+function input(){
+      if(82 in keys){ 
+          myGamePiece.color = "red"
+        }
+ }
+
+function input(){
+      if(89 in keys){ 
+          myGamePiece.color = "yellow"
+        }
+ }
+
+function input(){
+      if(38 in keys){ 
+          myGamePiece.radius = +10
+        }
+ }
+
+function input(){
+      if(40 in keys){ 
+          myGamePiece.radius = -10
+        }
+ }
+
+function input(){
+      if(32 in keys){ 
+            myGameArea.clear()
+        }
+ }
+</script>
+<p>Move the pen around the canvas to draw.</p>
+<p>"b" - change pen color to blue</p>
+<p>"g" - change pen color to green</p>
+<p>"r" - change pen color to red</p>
+<p>"y" - change pen color to yellow</p>
+<p>"up arrow" - make pen size larger</p>
+<p>"down arrow" - make pen size smaller</p>
+<p>"space bar" - clear the canvas (other than the current pen tip)</p>
+</body>
+</html>
